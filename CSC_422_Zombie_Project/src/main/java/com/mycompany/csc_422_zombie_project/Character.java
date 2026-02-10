@@ -10,4 +10,9 @@ package com.mycompany.csc_422_zombie_project;
  */
 public class Character {
     
+    
+    //Example methods:
+    //isAlive()
+    //takeDamage(int damage)
+    
 }
