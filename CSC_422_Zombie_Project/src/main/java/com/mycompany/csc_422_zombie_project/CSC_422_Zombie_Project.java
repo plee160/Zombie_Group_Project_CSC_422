@@ -12,5 +12,7 @@ public class CSC_422_Zombie_Project {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
+
+        System.out.println("Hi There!");
     }
 }
