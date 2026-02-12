@@ -8,6 +8,14 @@ package com.mycompany.csc_422_zombie_project;
  *
  * @author Phili
  */
-public class Survivor {
-    
+public abstract class Survivor extends Character {
+    public Survivor (int health, int attackDamage, String characterName) {
+        super(health, attackDamage, characterName);
+    }
+
+    @Override
+    public String getCharacterType() {
+        return "Survivor";
+    }
+
 }
