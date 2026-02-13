@@ -9,10 +9,8 @@ package com.mycompany.csc_422_zombie_project;
  * @author Phili
  */
 public class CSC_422_Zombie_Project {
-
     public static void main(String[] args) {
-        System.out.println("Hello World!");
-
-        System.out.println("Hi There!");
+        GameController game = new GameController();
+        game.start();
     }
 }
