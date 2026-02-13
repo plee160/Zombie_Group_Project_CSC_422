@@ -20,7 +20,7 @@ public abstract class Character {
         this.characterName = characterName;
     }
 
-    public boolean isAlice() {
+    public boolean isAlive() {
         return health > 0;
     }
 
