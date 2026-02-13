@@ -32,7 +32,7 @@ public abstract class Character {
     }
 
     public void attackTarget(Character target) {
-        if (!this.isAlice() || !target.isAlice()) {
+        if (!this.isAlive() || !target.isAlive()) {
             System.out.println("Character is not alive or target is not alive.");
         }else {
             target.takeDamage(this.attackDamage);
