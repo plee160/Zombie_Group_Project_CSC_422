@@ -1,3 +1,11 @@
+/*
+ * Author: Kyson, Philip, Alex, and Katie
+ * Date: 02/13/2026
+ * Class: CSC 422 100
+ * Project: Zombie Wars
+ * File Name: soldierCharacter.java
+ * Description: Represents a soldier survivor with high health and attack damage.
+ */
 package com.mycompany.csc_422_zombie_project;
 
 public class soldierCharacter extends Survivor{
