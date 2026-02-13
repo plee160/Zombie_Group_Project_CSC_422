@@ -12,5 +12,8 @@ public class CSC_422_Zombie_Project {
     public static void main(String[] args) {
         GameController game = new GameController();
         game.start();
+        
+        soldierCharacter soldier = new soldierCharacter();
+        soldier.getCharacterDescription();
     }
 }
