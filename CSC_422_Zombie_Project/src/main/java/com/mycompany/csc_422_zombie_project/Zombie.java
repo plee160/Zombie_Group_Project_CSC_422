@@ -12,13 +12,12 @@
 package com.mycompany.csc_422_zombie_project;
 
 public abstract class Zombie extends Character {
-    public Zombie (int health, int attackDamage, String characterName) {
-        super(health, attackDamage, characterName);
+    public Zombie (int id, int health, int attackDamage, String characterName) {
+        super(id, health, attackDamage, characterName);
     }
 
     @Override
     public String getCharacterType() {
         return "Zombie";
-    }
-    
+    } 
 }
