@@ -10,8 +10,8 @@ package com.mycompany.csc_422_zombie_project;
 
 public class commonInfectedCharacter extends Zombie{
     
-    public commonInfectedCharacter() {
-        super(30, 5, "commonInfected");
+    public commonInfectedCharacter(int id) {
+        super(id, 30, 5, "commonInfected");
     }
 
     @Override
