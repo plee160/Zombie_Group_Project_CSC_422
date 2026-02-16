@@ -64,7 +64,7 @@ public class GameController {
 
     // Method to print the head for the game, shows the amount of survivors and zombies.
     private void printHeader() {
-        System.out.println("We have " + survivors.size() + " survivors trying to make it to safety" + " (" + childCount + 
+        System.out.println("\nWe have " + survivors.size() + " survivors trying to make it to safety" + " (" + childCount + 
                             " children, " + teacherCount + " teachers, " + soldierCount + " soldiers)\n");
         System.out.println("But there are " + zombies.size() + " zombies waiting for them" + " (" + commonInfectedCount + " common infected, "
                             + tankCount + " tanks)\n");
