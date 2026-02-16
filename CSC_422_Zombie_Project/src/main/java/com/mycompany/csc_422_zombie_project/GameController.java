@@ -12,151 +12,106 @@ package com.mycompany.csc_422_zombie_project;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 public class GameController {
-
     private List<Survivor> survivors = new ArrayList<>();
     private List<Zombie> zombies = new ArrayList<>();
     private Random random = new Random();
-    private Scanner scanner = new Scanner(System.in);
 
-    private boolean gameStarted = false;
-    private boolean survivorTurn = true;
+    private int nextId = 0;
 
-    // Start the program
-    public void start() {
-        showMenu();
-    }
+    int childCount = 0;
+    int teacherCount = 0;
+    int soldierCount = 0;
 
-    // Main menu
-    private void showMenu() {
-        
-            System.out.println("\n+=====================+");
-            System.out.println("  WELCOME TO ZOMBIE WARS");
-            System.out.println("+=====================+");
-        
-       while (true) {
-            if (!gameStarted) {
-                System.out.println("1. Start Game");
-            } else {
-                System.out.println("1. Next Turn");
-            }
-
-            System.out.println("2. Exit");
-            System.out.print("Choose an option: ");
-
-            int choice = scanner.nextInt();
-
-            switch (choice) {
-                case 1:
-                    if (!gameStarted) {
-                        startGame();
-                    } else {
-                        nextTurn();
-                    }
-                    break;
-
-                case 2:
-                    System.out.println("Exiting game. Goodbye!");
-                    return;
-
-                default:
-                    System.out.println("Invalid choice. Try again.");
-            }
-        }
-    }
+    int commonInfectedCount = 0;
+    int tankCount = 0;
 
     // Initialize game
-    private void startGame() {
-
-        survivors.clear();
-        zombies.clear();
-
+    public void startGame() {
         generateCharacters();
-
-        gameStarted = true;
-        survivorTurn = true;
-
-        System.out.println("\nGame Started!");
-        System.out.println("Survivors: " + survivors.size());
-        System.out.println("Zombies: " + zombies.size());
+        printHeader();
+        runCombat();
+        generateReport();
     }
 
-    // Create characters
+    // Method that randomly generates each character and updates their count.
     private void generateCharacters() {
+        int children = random.nextInt(3);
+        int teachers = random.nextInt(5);
+        int soldiers = random.nextInt(5);
 
-        survivors.add(new soldierCharacter());
-        survivors.add(new teacherCharacter());
-        survivors.add(new childCharacter());
+        int commonInfected = random.nextInt(4);
+        int tanks = random.nextInt(8);
 
-        zombies.add(new commonInfectedCharacter());
-        zombies.add(new tankCharacter());
+        for (int i = 0; i < children; i++)
+            survivors.add(new childCharacter(nextId++));
+            childCount++;
+        for (int i = 0; i < teachers; i++)
+            survivors.add(new teacherCharacter(nextId++));
+        for (int i = 0; i < soldiers; i++)
+            teacherCount++;
+            survivors.add(new soldierCharacter(nextId++));
+            soldierCount++;
+
+        for (int i = 0; i < commonInfected; i++)
+            zombies.add(new commonInfectedCharacter(nextId++));
+            commonInfectedCount++;
+        for (int i = 0; i < tanks; i++)
+            zombies.add(new tankCharacter(nextId++));
+            tankCount++;
     }
 
-    // Take turns per character
-    private void nextTurn() {
+    // Method to print the head for the game, shows the amount of survivors and zombies.
+    private void printHeader() {
+        System.out.println("We have " + survivors.size() + " survivors trying to make it to safety" + " (" + childCount + 
+                            " children, " + teacherCount + " teachers, " + soldierCount + " soldiers)\n");
+        System.out.println("But there are " + zombies.size() + " zombies waiting for them" + " (" + commonInfectedCount + " common infected, "
+                            + tankCount + " tanks)\n");
+    }
 
-        if (survivors.isEmpty() || zombies.isEmpty()) {
-            generateReport();
-            gameStarted = false;
-            return;
-        }
+    // Method that simulates the combat between zombies and survivors.
+    private void runCombat() {
 
-        if (survivorTurn) {
+        while (!survivors.isEmpty() && !zombies.isEmpty()) {
 
-            Survivor attacker =
-                    survivors.get(random.nextInt(survivors.size()));
-            Zombie target =
-                    zombies.get(random.nextInt(zombies.size()));
+            if (random.nextBoolean()) {
+                Survivor attacker = survivors.get(random.nextInt(survivors.size()));
+                Zombie target = zombies.get(random.nextInt(zombies.size()));
 
-            attacker.attackTarget(target);
+                target.takeDamage(attacker.getAttackDamage());
 
-            System.out.println(attacker.getCharacterName() + " attacks "
-                    + target.getCharacterName()
-                    + " for " + attacker.getAttackDamage() + " damage.");
+                if (!target.isAlive()) {
+                    System.out.println("   " +
+                        attacker.getCharacterName() + " " + attacker.getId() +
+                        " killed " +
+                        target.getCharacterName() + " " + target.getId()
+                    );
+                    zombies.remove(target);
+                }
+            } else {
+                Zombie attacker = zombies.get(random.nextInt(zombies.size()));
+                Survivor target = survivors.get(random.nextInt(survivors.size()));
 
-            if (!target.isAlive()) {
-                zombies.remove(target);
-                System.out.println(target.getCharacterName() + " has died.");
+                target.takeDamage(attacker.getAttackDamage());
+
+                if (!target.isAlive()) {
+                    System.out.println("   " +
+                        attacker.getCharacterName() + " " + attacker.getId() +
+                        " killed " +
+                        target.getCharacterName() + " " + target.getId()
+                    );
+                    survivors.remove(target);
+                }
             }
-
-            survivorTurn = false;
-
-        } else {
-
-            Zombie zombieAttacker =
-                    zombies.get(random.nextInt(zombies.size()));
-            Survivor targetSurvivor =
-                    survivors.get(random.nextInt(survivors.size()));
-
-            zombieAttacker.attackTarget(targetSurvivor);
-
-            System.out.println(zombieAttacker.getCharacterName() + " attacks "
-                    + targetSurvivor.getCharacterName()
-                    + " for " + zombieAttacker.getAttackDamage() + " damage.");
-
-            if (!targetSurvivor.isAlive()) {
-                survivors.remove(targetSurvivor);
-                System.out.println(targetSurvivor.getCharacterName() + " has died.");
-            }
-
-            survivorTurn = true;
         }
     }
 
-    // Final report
+    // Method that prints the results of the game.
     private void generateReport() {
-
-        System.out.println("\n+==== GAME OVER ====+");
-
-        if (survivors.isEmpty()) {
-            System.out.println("Zombies win!");
-        } else {
-            System.out.println("Survivors win!");
-        }
-
-        System.out.println("Survivors left: " + survivors.size());
-        System.out.println("Zombies left: " + zombies.size());
+        if (survivors.isEmpty())
+            System.out.println("\nNone of the survivors made it.\n");
+        else
+            System.out.println("\nIt seems " + survivors.size() + " have made it to safety.\n");
     }
 }
