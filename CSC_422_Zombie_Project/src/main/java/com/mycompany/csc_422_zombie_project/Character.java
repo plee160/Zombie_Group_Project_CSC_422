@@ -15,15 +15,22 @@ package com.mycompany.csc_422_zombie_project;
 
 public abstract class Character {
     
+    protected int id;
     protected int health;
     protected int attackDamage;
     protected String characterName;
 
     // Constructor used by subclasses.
-    protected Character(int health, int attackDamage, String characterName) {
+    protected Character(int id, int health, int attackDamage, String characterName) {
+        this.id = id;
         this.health = health;
         this.attackDamage = attackDamage;
         this.characterName = characterName;
+    }
+
+    // Method to return a characters id. 
+    public int getId() {
+        return id;
     }
 
     // Method to check if the character is still alive.
