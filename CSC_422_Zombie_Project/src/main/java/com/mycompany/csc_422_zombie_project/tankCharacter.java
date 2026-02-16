@@ -10,8 +10,8 @@ package com.mycompany.csc_422_zombie_project;
 
 public class tankCharacter extends Zombie{
     
-    public tankCharacter() {
-        super(150, 20, "Tank");
+    public tankCharacter(int id) {
+        super(id, 150, 20, "Tank");
     }
 
     @Override
