@@ -16,6 +16,6 @@ package com.mycompany.csc_422_zombie_project;
 public class CSC_422_Zombie_Project {
      public static void main(String[] args) {
         GameController game = new GameController();
-        game.start();
+        game.startGame();
     }
 }
