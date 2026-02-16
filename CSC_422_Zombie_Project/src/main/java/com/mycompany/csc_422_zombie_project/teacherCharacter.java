@@ -10,8 +10,8 @@ package com.mycompany.csc_422_zombie_project;
 
 public class teacherCharacter extends Survivor{
     
-    public teacherCharacter() {
-        super(50, 5, "Teacher");
+    public teacherCharacter(int id) {
+        super(id, 50, 5, "Teacher");
     }
 
     @Override
