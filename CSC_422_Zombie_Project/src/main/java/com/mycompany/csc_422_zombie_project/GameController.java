@@ -18,6 +18,8 @@ public class GameController {
     private List<Zombie> zombies = new ArrayList<>();
     private Random random = new Random();
 
+    private WeaponCache weaponCache = new WeaponCache();
+
     private int nextId = 0;
 
     int childCount = 0;
@@ -30,6 +32,7 @@ public class GameController {
     // Initialize game
     public void startGame() {
         generateCharacters();
+        assignWeapons();   
         printHeader();
         runCombat();
         generateReport();
@@ -44,30 +47,49 @@ public class GameController {
         int commonInfected = random.nextInt(4);
         int tanks = random.nextInt(8);
 
-        for (int i = 0; i < children; i++)
+        for (int i = 0; i < children; i++) {
             survivors.add(new childCharacter(nextId++));
             childCount++;
-        for (int i = 0; i < teachers; i++)
+        }
+
+        for (int i = 0; i < teachers; i++) {
             survivors.add(new teacherCharacter(nextId++));
-        for (int i = 0; i < soldiers; i++)
             teacherCount++;
+        }
+
+        for (int i = 0; i < soldiers; i++) {
             survivors.add(new soldierCharacter(nextId++));
             soldierCount++;
+        }
 
-        for (int i = 0; i < commonInfected; i++)
+        for (int i = 0; i < commonInfected; i++) {
             zombies.add(new commonInfectedCharacter(nextId++));
             commonInfectedCount++;
-        for (int i = 0; i < tanks; i++)
+        }
+
+        for (int i = 0; i < tanks; i++) {
             zombies.add(new tankCharacter(nextId++));
             tankCount++;
+        }
+    }
+
+    // Assign weapons 
+    private void assignWeapons() {
+        System.out.println("\nAssigning weapons...");
+        for (Survivor s : survivors) {
+            Weapon w = weaponCache.getRandomWeapon();
+            s.setWeapon(w);
+            System.out.println(s.getCharacterName() + " " + s.getId() + " picked up a " + w.getName());
+        }
     }
 
     // Method to print the head for the game, shows the amount of survivors and zombies.
     private void printHeader() {
-        System.out.println("\nWe have " + survivors.size() + " survivors trying to make it to safety" + " (" + childCount + 
-                            " children, " + teacherCount + " teachers, " + soldierCount + " soldiers)\n");
-        System.out.println("But there are " + zombies.size() + " zombies waiting for them" + " (" + commonInfectedCount + " common infected, "
-                            + tankCount + " tanks)\n");
+        System.out.println("\nWe have " + survivors.size() + " survivors trying to make it to safety"
+                + " (" + childCount + " children, " + teacherCount + " teachers, " + soldierCount + " soldiers)\n");
+
+        System.out.println("But there are " + zombies.size() + " zombies waiting for them"
+                + " (" + commonInfectedCount + " common infected, " + tankCount + " tanks)\n");
     }
 
     // Method that simulates the combat between zombies and survivors.
@@ -76,20 +98,18 @@ public class GameController {
         while (!survivors.isEmpty() && !zombies.isEmpty()) {
 
             if (random.nextBoolean()) {
+                // Survivor attacks
                 Survivor attacker = survivors.get(random.nextInt(survivors.size()));
                 Zombie target = zombies.get(random.nextInt(zombies.size()));
 
-                target.takeDamage(attacker.getAttackDamage());
+                attacker.attackTarget(target); 
 
                 if (!target.isAlive()) {
-                    System.out.println("   " +
-                        attacker.getCharacterName() + " " + attacker.getId() +
-                        " killed " +
-                        target.getCharacterName() + " " + target.getId()
-                    );
                     zombies.remove(target);
                 }
+
             } else {
+                // Zombie attacks
                 Zombie attacker = zombies.get(random.nextInt(zombies.size()));
                 Survivor target = survivors.get(random.nextInt(survivors.size()));
 
@@ -97,9 +117,9 @@ public class GameController {
 
                 if (!target.isAlive()) {
                     System.out.println("   " +
-                        attacker.getCharacterName() + " " + attacker.getId() +
-                        " killed " +
-                        target.getCharacterName() + " " + target.getId()
+                            attacker.getCharacterName() + " " + attacker.getId() +
+                            " killed " +
+                            target.getCharacterName() + " " + target.getId()
                     );
                     survivors.remove(target);
                 }
