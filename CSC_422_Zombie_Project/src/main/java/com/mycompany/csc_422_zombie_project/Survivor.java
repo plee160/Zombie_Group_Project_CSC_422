@@ -13,12 +13,24 @@
 package com.mycompany.csc_422_zombie_project;
 
 public abstract class Survivor extends Character {
-    public Survivor (int id, int health, int attackDamage, String characterName) {
-        super(id, health, attackDamage, characterName);
+    
+    protected Weapon weapon;
+    
+    public Survivor (int health, int attackDamage, String characterName) {
+        super(health, attackDamage, characterName);
+    }
+    
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
     }
 
+    public Weapon getWeapon() {
+        return weapon;
+    }
+    
     @Override
     public String getCharacterType() {
         return "Survivor";
     }
+
 }
