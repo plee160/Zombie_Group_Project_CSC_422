@@ -14,58 +14,76 @@
 package com.mycompany.csc_422_zombie_project;
 
 public abstract class Character {
-    
-    protected int id;
+
     protected int health;
     protected int attackDamage;
     protected String characterName;
 
-    // Constructor used by subclasses.
-    protected Character(int id, int health, int attackDamage, String characterName) {
-        this.id = id;
+    protected Character(int health, int attackDamage, String characterName) {
         this.health = health;
         this.attackDamage = attackDamage;
         this.characterName = characterName;
     }
 
-    // Method to return a characters id. 
-    public int getId() {
-        return id;
-    }
-
-    // Method to check if the character is still alive.
     public boolean isAlive() {
         return health > 0;
     }
 
-    // Method that reduces health when taking damage.
-    public void takeDamage(int Damage) {
-        health -= Damage;
-        if (health <= 0) {
+    public void takeDamage(int damage) {
+        health -= damage;
+        if (health < 0) {
             health = 0;
         }
     }
-    
-    // Method to attack another chacter if the target is alive.
+
     public void attackTarget(Character target) {
+
         if (!this.isAlive() || !target.isAlive()) {
             System.out.println("Character is not alive or target is not alive.");
-        }else {
+            return;
+        }
+
+        // Zombies attack
+        if (!(this instanceof Survivor)) {
             target.takeDamage(this.attackDamage);
+            return;
+        }
+
+        // Survivors attack
+        Survivor survivor = (Survivor) this;
+
+        if (survivor.getWeapon() == null) {
+            System.out.println(survivor.getCharacterName() + " has no weapon!");
+            return;
+        }
+
+        Weapon w = survivor.getWeapon();
+
+        // Check weapon accuracy
+        if (Math.random() > w.getAccuracy()) {
+            System.out.println(survivor.getCharacterName() + " missed with " + w.getName());
+            return;
+        }
+
+        //Accurate shot/hit
+        target.takeDamage(w.getDamage());
+        System.out.println(survivor.getCharacterName() + " hit " + target.getCharacterName()
+                + " with " + w.getName() + " for " + w.getDamage() + " damage!");
+
+        if (!target.isAlive()) {
+            System.out.println(target.getCharacterName() + " was killed by "
+                    + survivor.getCharacterName() + " using " + w.getName());
         }
     }
 
-    // Method to return characters name.
     public String getCharacterName() {
         return characterName;
-    } 
+    }
 
-    // Method to return attack damage.
     public int getAttackDamage() {
         return attackDamage;
     }
 
-    // Method to get character's health.
     public int getHealth() {
         return health;
     }
