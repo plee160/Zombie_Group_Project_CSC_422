@@ -14,12 +14,23 @@
 package com.mycompany.csc_422_zombie_project;
 
 public abstract class Character {
-
+    protected int id;
     protected int health;
     protected int attackDamage;
     protected String characterName;
 
-    protected Character(int health, int attackDamage, String characterName) {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    
+
+    protected Character(int id, int health, int attackDamage, String characterName) {
+        this.id = id;
         this.health = health;
         this.attackDamage = attackDamage;
         this.characterName = characterName;
