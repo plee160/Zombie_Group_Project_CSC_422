@@ -16,8 +16,8 @@ public abstract class Survivor extends Character {
     
     protected Weapon weapon;
     
-    public Survivor (int health, int attackDamage, String characterName) {
-        super(health, attackDamage, characterName);
+    public Survivor (int id, int health, int attackDamage, String characterName) {
+        super(id, health, attackDamage, characterName);
     }
     
     public void setWeapon(Weapon weapon) {
