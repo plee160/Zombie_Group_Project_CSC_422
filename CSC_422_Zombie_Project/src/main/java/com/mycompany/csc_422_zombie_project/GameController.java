@@ -12,12 +12,19 @@ package com.mycompany.csc_422_zombie_project;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class GameController {
     private List<Survivor> survivors = new ArrayList<>();
     private List<Zombie> zombies = new ArrayList<>();
+    private ArrayList<Survivor> deadSurvivors = new ArrayList<>();
+    private ArrayList<Survivor> safeSurvivors = new ArrayList<>();
+    private ArrayList<Zombie> deadZombies = new ArrayList<>();
+    private ArrayList<Zombie> survivingZombies = new ArrayList<>();
+    
     private Random random = new Random();
-
+    private Scanner scanner = new Scanner(System.in);
+    
     private WeaponCache weaponCache = new WeaponCache();
 
     private int nextId = 0;
@@ -35,6 +42,8 @@ public class GameController {
         assignWeapons();   
         printHeader();
         runCombat();
+        safeSurvivors.addAll(survivors);
+        survivingZombies.addAll(zombies);
         generateReport();
     }
 
@@ -97,42 +106,99 @@ public class GameController {
 
         while (!survivors.isEmpty() && !zombies.isEmpty()) {
 
-            if (random.nextBoolean()) {
-                // Survivor attacks
-                Survivor attacker = survivors.get(random.nextInt(survivors.size()));
-                Zombie target = zombies.get(random.nextInt(zombies.size()));
+        //Ask user before each move
+        System.out.println("Press 1 for next move, Press 2 to exit:");
+        String choice = scanner.nextLine();
 
-                attacker.attackTarget(target); 
+        if (choice.equals("2")) {
+            System.out.println("Game exited.");
+            return;
+        }
 
-                if (!target.isAlive()) {
-                    zombies.remove(target);
-                }
+        if (!choice.equals("1")) {
+            System.out.println("Invalid input.");
+            continue;
+        }
 
-            } else {
-                // Zombie attacks
-                Zombie attacker = zombies.get(random.nextInt(zombies.size()));
-                Survivor target = survivors.get(random.nextInt(survivors.size()));
+        if (random.nextBoolean()) {
 
-                target.takeDamage(attacker.getAttackDamage());
+            // Survivor attacks
+            Survivor attacker = survivors.get(random.nextInt(survivors.size()));
+            Zombie target = zombies.get(random.nextInt(zombies.size()));
 
-                if (!target.isAlive()) {
-                    System.out.println("   " +
-                            attacker.getCharacterName() + " " + attacker.getId() +
-                            " killed " +
-                            target.getCharacterName() + " " + target.getId()
-                    );
-                    survivors.remove(target);
-                    System.out.println();
-                }
+            attacker.attackTarget(target);
+
+            if (!target.isAlive()) {
+                deadZombies.add(target);
+                zombies.remove(target);
+            }
+
+        } else {
+
+            // Zombie attacks
+            Zombie attacker = zombies.get(random.nextInt(zombies.size()));
+            Survivor target = survivors.get(random.nextInt(survivors.size()));
+
+            target.takeDamage(attacker.getAttackDamage());
+
+            System.out.println(attacker.getCharacterName() + " " + attacker.getId()
+            + " attacked "
+            + target.getCharacterName() + " " + target.getId()
+            + " for " + attacker.getAttackDamage() + " damage.");
+
+            if (!target.isAlive()) {
+            System.out.println(target.getCharacterName() + " " + target.getId() + " was killed.");
+            deadSurvivors.add(target);
+            survivors.remove(target);
+            }
+
+            System.out.println();
             }
         }
     }
 
+
     // Method that prints the results of the game.
     private void generateReport() {
-        if (survivors.isEmpty())
-            System.out.println("\nNone of the survivors made it.\n");
-        else
-            System.out.println("\nIt seems " + survivors.size() + " have made it to safety.\n");
-    }
+
+        System.out.println("\n===== FINAL REPORT =====\n");
+
+        System.out.println("Survivors who made it to safety:");
+        if (safeSurvivors.isEmpty()) {
+          System.out.println("None");
+        } else {
+            for (Survivor s : safeSurvivors) {
+            System.out.println(s.getCharacterName() + " " + s.getId());
+            }
+        }
+
+        System.out.println("\nSurvivors who died:");
+        if (deadSurvivors.isEmpty()) {
+              System.out.println("None");
+        } else {
+            for (Survivor s : deadSurvivors) {
+                System.out.println(s.getCharacterName() + " " + s.getId());
+            }
+        }
+
+        System.out.println("\nZombies killed:");
+        if (deadZombies.isEmpty()) {
+            System.out.println("None");
+        } else {
+            for (Zombie z : deadZombies) {
+                System.out.println(z.getCharacterName() + " " + z.getId());
+            }
+        }
+
+        System.out.println("\nZombies that survived:");
+        if (survivingZombies.isEmpty()) {
+            System.out.println("None");
+        } else {
+            for (Zombie z : survivingZombies) {
+                System.out.println(z.getCharacterName() + " " + z.getId());
+            }
+        }
+
+        System.out.println("\n=========================\n");
+        }
 }
