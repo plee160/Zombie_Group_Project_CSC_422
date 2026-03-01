@@ -40,12 +40,12 @@ public class GameController {
 
     // Method that randomly generates each character and updates their count.
     private void generateCharacters() {
-        int children = random.nextInt(3);
-        int teachers = random.nextInt(5);
-        int soldiers = random.nextInt(5);
+        int children = random.nextInt(10);
+        int teachers = random.nextInt(10);
+        int soldiers = random.nextInt(10);
 
-        int commonInfected = random.nextInt(4);
-        int tanks = random.nextInt(8);
+        int commonInfected = random.nextInt(6);
+        int tanks = random.nextInt(6);
 
         for (int i = 0; i < children; i++) {
             survivors.add(new childCharacter(nextId++));
@@ -122,6 +122,7 @@ public class GameController {
                             target.getCharacterName() + " " + target.getId()
                     );
                     survivors.remove(target);
+                    System.out.println();
                 }
             }
         }
